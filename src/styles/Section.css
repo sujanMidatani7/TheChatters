@@ -1,17 +1,14 @@
-body {
-    /* margin: 0; */
-    font-family: Arial, sans-serif;
-}
-
 .homesection {
-    margin-top: 100px;
+    margin-top: 70px;
     display: flex;
-    height: 100vh;
+    height: 90vh;
     border: 2px solid black;
 }
 
 .recent-chats {
-    width: 20%;
+    height: 80vh;
+    margin: 30px;
+    width: 20vw fit-content;
     padding: 20px;
     background-color: #f4f6f9;
     color: #333;
@@ -36,10 +33,13 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     overflow-y: auto;
+    
 }
 
 .new-chats {
     width: 80%;
+    height: 80vh;
+    margin: 30px;
     padding: 20px;
     display: flex;
     justify-content: space-around;
@@ -56,6 +56,9 @@ body {
     color: #fff;
     font-size: 16px;
     transition: background-color 0.3s;
+    margin: 10px;
+    width: fit-content;
+    padding: 10px;
 }
 
 .chat-button:hover {

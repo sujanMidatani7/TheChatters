@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faHome } from '@fortawesome/free-solid-svg-icons';
-// import './Header.css';
-import '../styles/header.css';
+import { faBars, faHome, faBell } from '@fortawesome/free-solid-svg-icons'; // Import the bell icon
+import '../styles/header.css'; // Adjust the path if necessary
 
 const Header = ({ className }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,9 +15,10 @@ const Header = ({ className }) => {
             <div className="header-content">
                 <FontAwesomeIcon icon={faHome} className="header-icon" />
                 <h1 className="header-title">My Website</h1>
+                <FontAwesomeIcon icon={faBell} className="header-menu-icon" /> {/* Bell icon */}
                 <FontAwesomeIcon icon={faBars} className="header-menu-icon" onClick={toggleMenu} />
             </div>
-            <div className={`sidebar-menu ${isMenuOpen ? 'open' : ''}`}>
+            <div className={`sidebar-menu ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
                 <ul>
                     <li><a href="#dashboard">Dashboard</a></li>
                     <li><a href="#about">About</a></li>
