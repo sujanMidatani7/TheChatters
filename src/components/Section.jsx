@@ -23,16 +23,22 @@ const Section = () => {
         setShowChatBox(true);
     };
 
+    const toggleChatBox = () => {
+        setShowChatBox(!showChatBox);
+    };
+
     return (
         <div className="homesection">
             <div className="recent-chats">
                 <input type="text" placeholder="Search chats..." className="search-bar" />
                 <div className="chats-list">Chats appear here</div>
             </div>
-            <div className="new-chats">
-                <button className="chat-button" onClick={handleJoinChatRoom}>Join a ChatRoom</button>
-                <button className="chat-button" onClick={() => alert('Create a ChatRoom button clicked!')}>Create a ChatRoom</button>
-            </div>
+            {!showChatBox && (
+                <div className="new-chats">
+                    <button className="chat-button" onClick={handleJoinChatRoom}>Join a ChatRoom</button>
+                    <button className="chat-button" onClick={() => alert('Create a ChatRoom button clicked!')}>Create a ChatRoom</button>
+                </div>
+            )}
             {showCodeDialog && (
                 <div className="dialog">
                     <div className="dialog-content">
@@ -62,7 +68,10 @@ const Section = () => {
                 </div>
             )}
             {showChatBox && (
-                <ChatRoom />
+                <div className="chat">
+                    <ChatRoom />
+                    <button className="chat-button" onClick={toggleChatBox}>Close Chat</button>
+                </div>
             )}
         </div>
     );
