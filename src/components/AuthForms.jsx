@@ -1,94 +1,129 @@
 import React, { useState } from "react";
 import "../styles/AuthForm.css";
 import { useNavigate } from "react-router-dom";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
+  doSignInWithGoogle,
+  doSendEmailVerification,
 } from "../firebase/auth";
-import { doSignInWithGoogle, doSendEmailVerification } from "../firebase/auth";
 import { useAuth } from "../contexts/authcontext";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { error } from "console";
+import { getAuth } from "firebase/auth";
+// import exp from "constants";
 const AuthForm = () => {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [isSigningin, setisSigningin] = useState(false);
-  const [raisederror, setraisederror] = useState("");
-
-  const { userLoggedIn } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [raisedError, setRaisedError] = useState("");
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
 
-  const onsignin = async (e) => {
+  const onSignIn = async (e) => {
     e.preventDefault();
-    if (!isSigningin) {
-      setisSigningin(true);
-      await signInWithEmailAndPassword(email, password);
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      try {
+        await doSignInWithEmailAndPassword(email, password);
+        navigate("/home");
+      } catch (error) {
+        console.log(error);
+        alert(error);
+        setRaisedError(error.message);
+        setIsSigningIn(false);
+      }
     }
   };
-  const ongooglesignin = async(e)=>
-    {
-        e.preventDefault();
-        if(!isSigningin)
-            {
-                setisSigningin(true);
-                doSignInWithGoogle().catch(error=>
-                    {
-                        console.log(error);
-                    }
-                )
-            }
+
+  const onSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      await doCreateUserWithEmailAndPassword(email, password);
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+      setRaisedError(error.message);
     }
+  };
+
+  const onGoogleSignIn = async (e) => {
+    e.preventDefault();
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      try {
+        await doSignInWithGoogle();
+        navigate("/home");
+      } catch (error) {
+        console.log(error);
+        setRaisedError(error.message);
+        setIsSigningIn(false);
+      }
+    }
+  };
+
   const directHome = () => {
-    // window.location.href = '/home';
     navigate("/home");
   };
+  const asdfs=()=>
+    {
+        console.log(getAuth());
+    }
   return (
     <div className={`container ${active ? "active" : ""}`} id="container">
       <div className="form-container sign-up">
-        <form>
+        <form onSubmit={onSignUp}>
           <h1>Create Account</h1>
-          {/* <div className="social-icons">
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faLinkedinIn} /></a>
-                    </div> */}
           <span>or use your email for registration</span>
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
-          <button type="button" onClick={directHome()}>
+          <input
+            type="text"
+            placeholder="Name"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button type="submit">
             Sign Up
           </button>
+          <button type="button" onClick={onGoogleSignIn}>
+            Sign up with Google
+          </button>
+          <button onClick={asdfs}>test button</button>
         </form>
       </div>
       <div className="form-container sign-in">
-        <form>
+        <form onSubmit={onSignIn}>
           <h1>Sign In</h1>
-          {/* <div className="social-icons">
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faGooglePlusG} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faFacebookF} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faGithub} /></a>
-                        <a href="#" className="icon"><FontAwesomeIcon icon={faLinkedinIn} /></a>
-                    </div> */}
           <span>or use your email for login</span>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input
+            type="email"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <a href="#">Forget Your Password?</a>
-          <button type="button" onClick={directHome()}>
+          <button type="submit">
             Sign In
           </button>
-          <button type="button"> signin in with google </button>
+          <button type="button" onClick={onGoogleSignIn}>
+            Sign in with Google
+          </button>
         </form>
       </div>
       <div className="toggle-container">
         <div className="toggle">
           <div className="toggle-panel toggle-left">
             <h1>Welcome Back!</h1>
-            <p>Enter your personal details to use all of site features</p>
+            <p>Enter your personal details to use all of the site's features</p>
             <button
               className="hidden"
               id="login"
@@ -96,11 +131,13 @@ const AuthForm = () => {
             >
               Sign In
             </button>
+            
           </div>
           <div className="toggle-panel toggle-right">
             <h1>Hello, Friend!</h1>
             <p>
-              Register with your personal details to use all of site features
+              Register with your personal details to use all of the site's
+              features
             </p>
             <button
               className="hidden"
@@ -109,9 +146,11 @@ const AuthForm = () => {
             >
               Sign Up
             </button>
+            
           </div>
         </div>
       </div>
+      {/* {raisedError && <div className="error">{raisedError}</div>} */}
     </div>
   );
 };

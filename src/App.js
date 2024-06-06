@@ -19,13 +19,14 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AuthForm from './components/AuthForms';
 import Home from './components/Home'; // Import your Home component
-
+import UserAPIComponent from './updates/UserAPIComponent';
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<AuthForm />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/update" element={<UserAPIComponent />}/>
       </Routes>
     </Router>
   );

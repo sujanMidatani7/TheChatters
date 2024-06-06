@@ -7,7 +7,8 @@ import { onAuthStateChanged } from "firebase/auth";
 const AuthContext = React.createContext();
 
 export function useAuth() {
-  return useContext(AuthContext);
+    // console.log(AuthContext);
+  return useContext(AuthContext.value);
 }
 
 export function AuthProvider({ children }) {
@@ -25,7 +26,7 @@ export function AuthProvider({ children }) {
   async function initializeUser(user) {
     if (user) {
 
-      setCurrentUser({ ...user });
+      setCurrentUser({ user });
 
       // check if provider is email and password login
       const isEmail = user.providerData.some(
