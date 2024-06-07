@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../styles/AuthForm.css";
 import { useNavigate } from "react-router-dom";
+// import { AuthProvider } from "../contexts/authcontext";
 import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
@@ -9,6 +11,7 @@ import {
 } from "../firebase/auth";
 import { useAuth } from "../contexts/authcontext";
 import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 // import exp from "constants";
 const AuthForm = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +20,39 @@ const AuthForm = () => {
   const [raisedError, setRaisedError] = useState("");
   const [active, setActive] = useState(false);
   const navigate = useNavigate();
+  const API_ENDPOINT = "https://chatters-backend.onrender.com";
+  const auth = getAuth();
+  const [fbId, setFbId] = useState("");
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [about, setAbout] = useState("");
+  const createUser = async () => {
+    
+    const userData = {
+      fb_id: fbId,
+      name: name,
+      last_name: lastName,
+      email_id: emailId,
+      about: about,
+    };
+
+    try {
+      const headers = {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      };
+      const response = await axios.post(
+        `${API_ENDPOINT}/user/createUser`,
+        userData,
+        {
+          headers,
+        }
+      );
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+  };
 
   const onSignIn = async (e) => {
     e.preventDefault();
@@ -24,6 +60,7 @@ const AuthForm = () => {
       setIsSigningIn(true);
       try {
         await doSignInWithEmailAndPassword(email, password);
+        setFbId(auth.currentUser.uid);
         navigate("/home");
       } catch (error) {
         console.log(error);
@@ -38,6 +75,7 @@ const AuthForm = () => {
     e.preventDefault();
     try {
       await doCreateUserWithEmailAndPassword(email, password);
+      //create user should be called here
       navigate("/home");
     } catch (error) {
       console.log(error);
@@ -51,6 +89,7 @@ const AuthForm = () => {
       setIsSigningIn(true);
       try {
         await doSignInWithGoogle();
+        //get user should be used if user not found createuser should be called
         navigate("/home");
       } catch (error) {
         console.log(error);
@@ -59,14 +98,14 @@ const AuthForm = () => {
       }
     }
   };
-
+  const testfun =()=>
+  {
+    console.log(useAuth);
+  }
   const directHome = () => {
     navigate("/home");
   };
-  const asdfs=()=>
-    {
-        console.log(getAuth());
-    }
+  
   return (
     <div className={`container ${active ? "active" : ""}`} id="container">
       <div className="form-container sign-up">
@@ -93,7 +132,7 @@ const AuthForm = () => {
           <button type="button" onClick={onGoogleSignIn}>
             Sign up with Google
           </button>
-          <button onClick={asdfs}>test button</button>
+          <button >test button</button>
         </form>
       </div>
       <div className="form-container sign-in">

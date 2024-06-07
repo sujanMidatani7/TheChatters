@@ -25,5 +25,4 @@ async function createUser() {
     console.error('Error creating user:', error);
   }
 }
-
 createUser();

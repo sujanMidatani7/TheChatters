@@ -1,8 +1,9 @@
-.container {
+.updatecontainer {
+  /* position: relative; */
     max-width: 800px;
-    margin-top: 500px;
+    /* margin-top: 00px; */
     padding: 20px;
-    overflow: scroll;
+    /* overflow: scroll; */
   }
   
   h2 {
